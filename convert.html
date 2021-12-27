@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root">
+
+    </div>
+</body>
+<script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function TimeConverter() {
+        const [amount , setAmount] = React.useState()
+        const [flipped , setFlipped] = React.useState(false);
+        const onChange =(e)=> {
+            setAmount(e.target.value);
+        }
+        const reset = () => {
+            setAmount(0);
+        }
+        const flip = () => {
+            reset();
+            setFlipped((current) => !current);
+        }
+        return (
+            <div> 
+                <h3>{flipped ? "시간을 분으로 바꾸면 얼마일까용??" : "분을 시간으로 바꾸면 얼마일까용??"}</h3>
+                <label for="min">Minutes</label><br/>
+                <input value = {flipped ? amount * 60: amount} onChange ={onChange} id = "minutes" placeholder="분을 적으시오" type= "number" disabled = {flipped}/>
+                <h4>convert : {amount}</h4>
+                <label for ="hour">Hours</label>
+                <input value = {flipped ? amount : (amount / 60)} onChange ={onChange} id = "hours" placeholder="시간을 적으시오" type= "number" disabled = {!flipped}/>
+                <button onClick = {reset}>리셋</button>
+                <button onClick = {flip}>{flipped ? "시->분" : "분 -> 시"}</button>
+                </div>
+        );
+    }
+    function LengthConverter() {
+        const [length , setLength] = React.useState();
+        const [invert , setInvert] = React.useState(false);
+
+        const changeLen = (e)=>{
+            setLength(e.target.value);
+        }
+        const reset = () => {
+            setLength(0);
+        }
+        const convert = () => {
+            reset();
+            setInvert((current) => !current);
+        }
+
+        return (
+        <div>
+            <h3> {invert ? "마일을 킬로미터로 바꾸면 몇일까용?" : "킬로미터를 마일로 바꾸면 몇일까용?" }</h3>
+            <label>kM </label><br/><br/>
+            <input value = {invert ? (length * 1.609).toFixed(2) :length } type="number" placeholder ="KM" onChange ={changeLen} disabled = {invert}></input>
+            <br/><br/>
+            <label>miles</label><br/><br/>
+            <input value = {invert ? length : (length / 1.609).toFixed(2)  } type="number" placeholder = "M" onChange = {changeLen} disabled = {!invert}></input><br/>
+            <button onClick = {reset}>리셋</button><br/>
+            <button onClick = {convert}>변환</button>
+            
+        </div>   
+        )
+    }
+    function App() {
+        const [index , setIndex] = React.useState("x");
+        const onSelect = (e) => {
+            setIndex(e.target.value);
+        }
+        return (
+            <div> 
+                <h1>Converter</h1>
+                <select value={index} onChange = {onSelect}>
+                    <option value="x">Select</option>
+                    <option value ="0">시간변환기</option>
+                    <option value ="1">단위변환기</option>    
+                </select>
+                <hr/>
+                {index === "x" ? "Please Select you want to do" : null}
+                {index === "0" ? <TimeConverter/> : null }
+                {index === "1" ? <LengthConverter/> : null}
+            </div>
+        );
+    }
+    ReactDOM.render(<App/> , root);
+    
+
+</script>
+</html>
