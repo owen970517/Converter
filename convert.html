@@ -13,6 +13,23 @@
 <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script type="text/babel">
+    let currencyRatio = {
+        USD : {
+            KRW : 1184.36,
+            USD : 1,
+            YEN : 114.49
+        } , 
+        KRW : {
+            USD : 0.000843,
+            KRW : 1,
+            YEN : 0.096
+        } , 
+        YEN : {
+            USD : 0.008740,
+            KRW : 10.37,
+            YEN : 1
+        }
+    }
     const root = document.getElementById("root");
     function TimeConverter() {
         const [amount , setAmount] = React.useState()
@@ -69,6 +86,36 @@
         </div>   
         )
     }
+    function MoneyConverter() {
+        const [Money , setMoney] = React.useState();
+        const [convert , setConvert] = React.useState(false);
+        const [select , setSelect] = React.useState();
+         const changeMon = (e) => {
+            setMoney(e.target.value);
+        }
+        const reset = ()=> {
+            setMoney(0);
+        }
+        const switching=()=> {
+            reset();
+            setConvert((current) => !current);
+        }
+        const selected = (e) => {
+            setSelect(e.target.value);
+        }
+        return (
+            <div>
+                <h3>환율 변환기</h3>
+                <label>KRW</label><br/><br/>
+                <input value = {convert ? (10.37 * Money).toFixed(2) : Money } type="number" placeholder ="원" onChange ={changeMon} disabled = {convert}></input>
+                <br/><br/>
+                <label>JPY</label><br/><br/>
+                <input value = {convert ? Money : (Money * 0.096).toFixed(2)  } type="number" placeholder = "엔" onChange = {changeMon} disabled = {!convert}></input><br/>
+                <button onClick = {reset}>리셋</button><br/>
+                <button onClick = {switching}>변환</button>
+            </div>
+        )
+    }
     function App() {
         const [index , setIndex] = React.useState("x");
         const onSelect = (e) => {
@@ -80,12 +127,14 @@
                 <select value={index} onChange = {onSelect}>
                     <option value="x">Select</option>
                     <option value ="0">시간변환기</option>
-                    <option value ="1">단위변환기</option>    
+                    <option value ="1">단위변환기</option>   
+                    <option value="2">환율변환기</option> 
                 </select>
                 <hr/>
                 {index === "x" ? "Please Select you want to do" : null}
                 {index === "0" ? <TimeConverter/> : null }
                 {index === "1" ? <LengthConverter/> : null}
+                {index === "2" ? <MoneyConverter/> : null}
             </div>
         );
     }
